@@ -56,7 +56,9 @@ def solve_ilp_trees(g, tree_osm, tree_atkis, num_osm_polys, num_atkis_polys, sol
     for u, v, data in g.edges(data=True):
         # Ensure variables are added only once for undirected edges (left side to right side of the bipartite graph)
         if not g.nodes[u]['referenced_map'] and g.nodes[v]['referenced_map']:
-            print("Ensure variables are added only once for undirected edges")
+            # -------> EDIT  ------->
+            # print("Ensure variables are added only once for undirected edges")
+            # <------- EDIT  <-------
             edge_var = model.addVar(vtype=GRB.BINARY, name=f"edge_{u}_{v}")
             variables.append(edge_var)
             weights.append(data['weight'])
@@ -82,20 +84,20 @@ def solve_ilp_trees(g, tree_osm, tree_atkis, num_osm_polys, num_atkis_polys, sol
 
         for i in range(num_polys):
             # -------> EDIT  ------->
-            for v, data in tree.nodes(data=True):
-              print(v, data['vertex_id_in_g'], i)
+            # for v, data in tree.nodes(data=True):
+            #   print(v, data['vertex_id_in_g'], i)
             # <------- EDIT  <-------
             referring_vertices = [
-                data['vertex_id_in_g']
+                # data['vertex_id_in_g']
                 # -------> EDIT  ------->
-                # print('i', i)
+                data['referenced_polys']
                 # <------- EDIT  <-------
                 for v, data in tree.nodes(data=True)
                 if 'referenced_polys' in data and i in data['referenced_polys']
             ]
           
             # -------> EDIT  ------->
-            print(referring_vertices)
+            # print(referring_vertices)
             # <------- EDIT  <-------
 
             if referring_vertices:
@@ -111,6 +113,7 @@ def solve_ilp_trees(g, tree_osm, tree_atkis, num_osm_polys, num_atkis_polys, sol
     # Retrieve solution: for each selected edge, add it to the solution
     matches_added = 0
     for i, var in enumerate(variables):
+        # print(i, var)
         if var.x == 1.0:
             # Add the match to the solution
             solution.add_match(
