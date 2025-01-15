@@ -65,7 +65,7 @@ def plot_ani(polys1: shapely.Polygon, polys2: shapely.Polygon,
         shapely.plotting.plot_polygon(poly, ax2)
     fig.suptitle("Set ID: " + str(title) + "Original data")
     
-    colors = "bgrcmykw"
+    colors = "bgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykw"
     color_index = 0
     
     def update(frame):
@@ -77,7 +77,7 @@ def plot_ani(polys1: shapely.Polygon, polys2: shapely.Polygon,
         if frame == 0:
             shapely.plotting.plot_polygon(G1.nodes[0]['poly'], ax1, color=colors[0])
             shapely.plotting.plot_polygon(G2.nodes[0]['poly'], ax2, color=colors[0])
-            fig.suptitle("Set ID: " + str(title) + " Original data")
+            fig.suptitle("Set ID: " + str(title) + ", depth: " + str(frame))
         else:
             for edges in list_edges_G1:
                 target_node = edges[1]
