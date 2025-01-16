@@ -21,11 +21,7 @@ import networkx as nx
     data_endenich,             1060
     data_zentrum,               160
 '''
-file_path = "data/data_auerberg"
-# file_path = "data/data_dottendorf"
-# file_path = "data/data_duisdorf"
-# file_path = "data/data_endenich"
-# file_path = "data/data_zentrum"
+file_path = "toy_example/data_auerberg"
 reader = BinaryPolygonFileReader(file_path)
 
 def find_polys_smallest_dist_pairs(polys: List)-> tuple((List, List, List)):
@@ -86,6 +82,7 @@ def add_node(G, poly_i, node_num):
         G.add_node(node_num_i, poly=poly_i, vertex_id_in_g=node_num_i, referenced_polys=[poly_i])
 
     return node_num_i, node_num
+
 def algorithm_1(polys: List)-> nx.classes.graph.Graph:
     # it would be a good idea if we can use pointer here for G.
     G = nx.DiGraph()
@@ -120,7 +117,7 @@ def algorithm_1(polys: List)-> nx.classes.graph.Graph:
 
     return G
 
-  
+
 # Save timestamp
 from networkx.algorithms import bipartite
 total_obj=0
