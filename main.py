@@ -13,17 +13,6 @@ import shapely.plotting
 import networkx as nx
 
 
-'''
-    Name,            number of sets
-    data_auerberg,              796
-    data_dottendorf,            871
-    data_duisdorf,             2127
-    data_endenich,             1060
-    data_zentrum,               160
-'''
-file_path = "toy_example/data_auerberg"
-reader = BinaryPolygonFileReader(file_path)
-
 def find_polys_smallest_dist_pairs(polys: List)-> tuple((List, List, List)):
     smallest_dist = float('inf')
     poly_i = None
@@ -118,13 +107,24 @@ def algorithm_1(polys: List)-> nx.classes.graph.Graph:
     return G
 
 
+'''
+    Name,            number of sets
+    data_auerberg,              796
+    data_dottendorf,            871
+    data_duisdorf,             2127
+    data_endenich,             1060
+    data_zentrum,               160
+'''
+file_path = "data/data_endenich"
+reader = BinaryPolygonFileReader(file_path)
+
 # Save timestamp
 from networkx.algorithms import bipartite
 total_obj=0
 start = time.time()
 sol_algo1 = Solution()
-G1 = None
-G2 = None
+lamda = 0.8
+
 while True:
     try:
         set_id, polys1, polys2 = reader.read_next_set()
@@ -133,7 +133,7 @@ while True:
         
         B_sol = nx.Graph()
     
-        lamda = 0.8
+        
         for G1_node_num in range(len(G1)):
             j = G1_node_num 
             for G2_node_num in range(len(G2)):
@@ -154,9 +154,9 @@ while True:
                 iou = intersect / union
                 
                 B_sol.add_edges_from([ (G1_node_num, str(G2_node_num), {'weight': iou - lamda}) ]             )
-                solve_ilp_trees(g=B_sol, tree_osm=G2, tree_atkis=G1, num_osm_polys=len(polys2), num_atkis_polys=len(polys1), solution=sol_algo1)
+
+        solve_ilp_trees(g=B_sol, tree_osm=G2, tree_atkis=G1, num_osm_polys=len(polys2), num_atkis_polys=len(polys1), solution=sol_algo1)
   
-                print(sol_algo1.objective)
     except:
         if G1 == None or G2 == None:
             print("last set id: ",set_id)
