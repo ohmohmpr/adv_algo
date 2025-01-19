@@ -138,11 +138,11 @@ while True:
             j = G1_node_num 
             for G2_node_num in range(len(G2)):
                 B_sol.add_nodes_from([ (G1_node_num, {
-                    'referenced_map': False, 
+                    'referenced_map': True, 
                     'referenced_polys': G1.nodes[G1_node_num]['referenced_polys']                     
                 })  ], bipartite=0)
                 B_sol.add_nodes_from([ (str(G2_node_num), {
-                    'referenced_map': True, 
+                    'referenced_map': False, 
                     'referenced_polys': G2.nodes[G2_node_num]['referenced_polys']
                 })  ], bipartite=1)
         
