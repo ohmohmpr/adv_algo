@@ -97,11 +97,11 @@ def plot_ani(polys1: shapely.Polygon, polys2: shapely.Polygon,
         ax1.clear()
         ax2.clear()
         if G1.number_of_nodes() != 0:
-          list_edges_G1 = list(nx.bfs_edges(G1, source=G1.number_of_nodes()-1, reverse=True))
+          list_edges_G1 = list(nx.bfs_edges(G1, source=G1.number_of_nodes()-1, depth_limit=frame))
           
         if G2.number_of_nodes() != 0:
-          list_edges_G2 = list(nx.bfs_edges(G2, source=G2.number_of_nodes()-1, reverse=True))
-          
+          list_edges_G2 = list(nx.bfs_edges(G2, source=G2.number_of_nodes()-1, depth_limit=frame))
+        print("frame", frame, list_edges_G1)
         if frame == 0:
             root_node_G1 = list_edges_G1[0][0]
             root_node_G2 = list_edges_G2[0][0]
