@@ -87,6 +87,7 @@ def plot_ani(polys1: shapely.Polygon, polys2: shapely.Polygon,
     
     for poly in polys2:
         shapely.plotting.plot_polygon(poly, ax2)
+
     fig.suptitle("Set ID: " + str(title) + "Original data")
     
     colors = "bgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykwbgrcmykw"
@@ -95,22 +96,31 @@ def plot_ani(polys1: shapely.Polygon, polys2: shapely.Polygon,
     def update(frame):
         ax1.clear()
         ax2.clear()
-        list_edges_G1 = list(nx.bfs_edges(G1, source=0, depth_limit=frame))
-        list_edges_G2 = list(nx.bfs_edges(G2, source=0, depth_limit=frame))
-    
+        if G1.number_of_nodes() != 0:
+          list_edges_G1 = list(nx.bfs_edges(G1, source=G1.number_of_nodes()-1, reverse=True))
+          
+        if G2.number_of_nodes() != 0:
+          list_edges_G2 = list(nx.bfs_edges(G2, source=G2.number_of_nodes()-1, reverse=True))
+          
         if frame == 0:
-            shapely.plotting.plot_polygon(G1.nodes[0]['poly'], ax1, color=colors[0])
-            shapely.plotting.plot_polygon(G2.nodes[0]['poly'], ax2, color=colors[0])
+            root_node_G1 = list_edges_G1[0][0]
+            root_node_G2 = list_edges_G2[0][0]
+          
+            poly_G1 = unpack_poly(polys1, G1.nodes[root_node_G1]['referenced_polys'])
+            poly_G2 = unpack_poly(polys2, G2.nodes[root_node_G2]['referenced_polys'])
+          
+            shapely.plotting.plot_polygon(poly_G1, ax1, color=colors[0])
+            shapely.plotting.plot_polygon(poly_G2, ax2, color=colors[0])
             fig.suptitle("Set ID: " + str(title) + ", depth: " + str(frame))
         else:
             for edges in list_edges_G1:
                 target_node = edges[1]
-                polys1 = G1.nodes[target_node]['poly']
-                shapely.plotting.plot_polygon(polys1, ax1, color=colors[target_node])
+                poly_G1 = unpack_poly(polys1, G1.nodes[target_node]['referenced_polys'])
+                shapely.plotting.plot_polygon(poly_G1, ax1, color=colors[target_node])
             for edges in list_edges_G2:
                 target_node = edges[1]
-                polys2 = G2.nodes[target_node]['poly']
-                shapely.plotting.plot_polygon(polys2, ax2, color=colors[target_node])
+                poly_G2 = unpack_poly(polys2, G2.nodes[target_node]['referenced_polys'])
+                shapely.plotting.plot_polygon(poly_G2, ax2, color=colors[target_node])
             fig.suptitle("Set ID: " + str(title) + ", depth: " + str(frame))
           
         if len(list_edges_G1) == 0:
